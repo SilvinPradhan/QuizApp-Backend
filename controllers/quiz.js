@@ -1,11 +1,11 @@
 const Questions = require('../models/quiz');
 const { erroHandler, errorHandler } = require('../helpers/dbErrorHandler');
-const { response } = require('express');
 
 exports.create = async (req, res) => {
 	const { description } = req.body;
+	const { title } = req.body;
 	const { alternatives } = req.body;
-	let questions = new Questions({ description, alternatives });
+	let questions = new Questions({ description, alternatives, title });
 	questions.save((err, data) => {
 		if (err) {
 			console.log(err);
@@ -50,4 +50,20 @@ exports.submitSingle = (req, res) => {
 	res.json({
 		message: 'Endpoint to submit a single quiz result',
 	});
+};
+
+exports.remove = async (req, res) => {
+	try {
+		const _id = req.params.id;
+		const question = await Questions.deleteOne({ _id });
+		if (question.deletedCount === 0) {
+			return res.status(404).json();
+		} else {
+			return res.status(204).json();
+		}
+	} catch (err) {
+		return res.json({
+			error: err,
+		});
+	}
 };
