@@ -57,7 +57,7 @@ exports.remove = async (req, res) => {
 		const _id = req.params.id;
 		const question = await Questions.deleteOne({ _id });
 		if (question.deletedCount === 0) {
-			return res.status(404).json();
+			return res.status(404).json(message: "This was the last quiz question on the database.");
 		} else {
 			return res.status(204).json();
 		}
